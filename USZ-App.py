@@ -18,7 +18,7 @@ page_title = 'USZ Balbanov App'
 page_description = 'This App automates predictive data analysis for the Breast Cancer Wisconsin Dataset with the [scikit-learn](https://scikit-learn.org/stable/index.html) API. \
 It is a functional prototype for Prof. Dr. med. Dr. rer. nat. Stefan Balabanov and automates the process steps for a small data science project or a first shot at model selection. \
 The application does not replace a full and comprehensive data science project. It is also limited in the capacity the Streamlit hosting provides. \
-The application allows classification of the variable "diagnosis" with a selection of machine learning algorithms.'
+The application allows classification of the variable "diagnosis" with a selection of machine learning algorithms (a.k.a. models).'
 
 page_icon = ':lab_coat:' # emoji : https://www.webfx.com/tools/emoji-cheat-sheet/
 layout = 'centered' # derfault but can be chenged to wide
@@ -420,7 +420,7 @@ st.write('')
 st.subheader('Data Preprocessing')
 st.write("This data set is actually allready quite clean. Some common preprocessing steps are still shown. It is assumed, that feature engineering steps like binning and ordinal encoding are allready applied to the data. \
          Missing-values could automatically be filled (for numerical features by their mean and categorical by their mode). \
-         Alternatively all instances with missing-values could be droped. The PCA retains 95% of the selected features variance \
+         Alternatively all instances with missing-values could be droped. The Princiapal Component Analysis (PCA) retains 95% of the selected features variance \
          and replaces the features with those dimensions. Dummies refers to what is also known as 'One Hot Encoding' for categorical features so the algorithm can understand them.")
 st.write('')
 # --- fill or drop NA
@@ -469,7 +469,7 @@ else:
 # --- PCA
 
 us_pca_var = st.multiselect(
-    'Do you want to do a Principal component analysis (PCA) on some columns?',
+    'Do you want to do a Principal Component Analysis (PCA) on some columns?',
     find_num_cols(train_df), default=None)
 
 if len(us_pca_var) > 0:
@@ -799,8 +799,8 @@ if us_y_var in clas_cols and len(cat_cols_x) == 0 and unique_y > 1 and  unique_y
 
     
     st.header("Feature Importance")
-    st.write("Here the feature importance is done with the XGBoost Classifier that uses boosted trees. \
-             The Gain implies the relative contribution of the corresponding feature to the model\
+    st.write("Here the feature importance is assessed with the XGBoost Classifier that uses boosted trees. \
+             The importance (gain) implies the relative contribution of the corresponding feature to the model,\
               calculated by taking each feature’s contribution for each tree in the model. \
              A higher value of this metric when compared to another feature implies it is \
              more important for generating a prediction.")
@@ -849,9 +849,9 @@ if us_y_var in clas_cols and len(cat_cols_x) == 0 and unique_y > 1 and  unique_y
 # ------------- Launch model calculation --------------
 
 st.header('Launch Model Training and Prediction')
-descr_model_launch = 'Here is a selection of algorithms that can be applied to predict the diagnosis. \
+descr_model_launch = 'Here is a selection of algorithms that can be applied to predict the diagnosis and compared on their performance metrics. \
     The data set is very small, so you can just launch them with all models selected. \
-    The models will be trained on the training data and tested on the unseen test set. \
+    The models will be trained on the training data and their prediction will be scored on the unseen test set. \
         Unless otherwise indicated, all models are run in the [scikit-learn](https://scikit-learn.org/stable/index.html) -default configuration. \
 Crossvalidation, gridsearch and manual hyper parameter tuning are not implemented.'
 
@@ -1093,7 +1093,7 @@ if us_y_var in reg_cols and len(cat_cols_x) == 0 and len(us_x_var) > 0:
         reg_scores_df, reg_pred_y_df, reg_res_y_df = reg_models_comparison(X_train, X_test, y_train, y_test, us_reg_models)
 
         # Titel
-        st.subheader("Results for Regression Models on Testset")
+        st.subheader("Results for Regression Models on Test Set")
 
         # plot model scores
         fig = px.bar(reg_scores_df, x = 'max(R2, 0)', y = 'Model', orientation = 'h', color = 'max(R2, 0)',
@@ -1222,11 +1222,11 @@ if us_y_var in clas_cols and len(cat_cols_x) == 0 and unique_y > 1 and  unique_y
         clas_scores_df, clas_pred_y_df, clas_label_df = class_models_comparison(X_train, X_test, y_train, y_test, us_clas_models)
 
         # Titel
-        st.subheader("Results for Classification Models on Testset")
+        st.subheader("Results for Classification Models on Test Set")
 
         with st.expander("See metrics explanation"):
             st.write("""
-                - Accuracy: Represents the number of correctly classified data instances over the total number of data instances.
+                - Accuracy: Represents the number of correctly classified data instances over the total number of data instances. A score of 1.0 is a perfect score. The DummyClassifier just allways predicts the most frequent class and can be seen as a basline for all other models.
                 - Precision (positive predictive value): In a classification task, the precision for a class is the number of true positives (i.e. the number of items correctly labelled as belonging to the positive class) divided by the total number of elements labelled as belonging to the positive class (i.e. the sum of true positives and false positives, which are items incorrectly labelled as belonging to the class).
                 - Recall (sensitivity or true positive rate): Is defined as the number of true positives divided by the total number of elements that actually belong to the positive class (i.e. the sum of true positives and false negatives, which are items which were not labelled as belonging to the positive class but should have been).
                 - F1: Combines the precision and recall of a classifier into a single metric by taking their harmonic mean.
