@@ -14,7 +14,7 @@ from Libs_Functions_USZ import *
 
 # ------------- Settings --------------
 
-page_title = 'USZ Balbanov App'
+page_title = 'Balabanov USZ App'
 page_description = 'This App automates predictive data analysis for the Breast Cancer Wisconsin Dataset with the [scikit-learn](https://scikit-learn.org/stable/index.html) API. \
 It is a functional prototype for Prof. Dr. med. Dr. rer. nat. Stefan Balabanov and automates the process steps for a small data science project or a first shot at model selection. \
 The application does not replace a full and comprehensive data science project. It is also limited in the capacity the Streamlit hosting provides. \
